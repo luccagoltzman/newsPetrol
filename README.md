@@ -1,56 +1,56 @@
-# News Petrol
+# Instagram Posts
 
-Frontend em React + TypeScript para exibir notícias de petróleo, gás e energias renováveis, consumindo a API de Notícias de Petróleo e Gás.
+Frontend em React + TypeScript para buscar e exibir posts (fotos e vídeos) do Instagram por usuário, usando a API [Instagram120](https://rapidapi.com) da RapidAPI.
 
 ## Estrutura do projeto
 
 ```
 src/
-├── components/          # Componentes reutilizáveis
-│   ├── Button/          # Button.tsx + Button.module.css
-│   ├── Card/            # Card de notícia
-│   ├── EmptyState/      # Estado vazio
-│   ├── ErrorMessage/    # Mensagem de erro + retry
-│   ├── Filter/          # Filtro por fonte
-│   ├── Header/          # Cabeçalho da aplicação
-│   ├── Layout/          # Layout principal
-│   └── Spinner/         # Loading
+├── components/
+│   ├── Button/
+│   ├── Card/
+│   ├── EmptyState/
+│   ├── ErrorMessage/
+│   ├── Filter/
+│   ├── Header/
+│   ├── Layout/
+│   ├── PostCard/        # Card de post (mídia + legenda)
+│   ├── Spinner/
+│   └── UsernameInput/   # Campo usuário + botão Buscar
 ├── config/
-│   └── constants.ts     # Constantes e opções de fonte
+│   └── constants.ts
 ├── pages/
-│   └── NewsPage/        # Página de listagem de notícias
+│   └── NewsPage/        # Página principal (busca por usuário)
 ├── services/
-│   └── news.service.ts  # Chamadas à API
+│   └── instagram.service.ts   # POST /api/instagram/posts
 ├── styles/
-│   └── global.css       # Estilos globais e variáveis CSS
+│   └── global.css
 ├── types/
-│   └── news.types.ts    # Tipos TypeScript
+│   └── instagram.types.ts
 ├── App.tsx
 └── main.tsx
 ```
 
-Cada componente segue a separação clara entre **lógica/JSX** (`.tsx`) e **estilos** (`.module.css`).
+## Configuração da API (RapidAPI)
 
-## Configuração da API
+A aplicação usa a API **Instagram120** na RapidAPI.
 
-A URL base da API é configurável via variável de ambiente:
-
-- Crie um arquivo `.env` na raiz do projeto.
-- Defina `VITE_API_BASE_URL` com a URL base da API (ex.: `https://api.exemplo.com`).
-
-Exemplo `.env`:
+1. Crie um arquivo `.env` na raiz do projeto.
+2. Adicione sua chave da RapidAPI:
 
 ```
-VITE_API_BASE_URL=https://sua-api.com
+VITE_RAPIDAPI_KEY=sua_chave_aqui
 ```
 
-O endpoint utilizado é `GET /noticias` com parâmetro opcional `source` para filtrar por fonte (ex.: `telegraph`, `thetimes`).
+Opcional: para outro host, defina `VITE_RAPIDAPI_HOST`. O padrão é `instagram120.p.rapidapi.com`.
+
+A API é chamada com **POST** em `/api/instagram/posts`, corpo JSON: `{"username":"...", "maxId":""}`.
 
 ## Scripts
 
-- `npm run dev` — inicia o servidor de desenvolvimento
-- `npm run build` — gera o build de produção
-- `npm run preview` — visualiza o build localmente
+- `npm run dev` — servidor de desenvolvimento
+- `npm run build` — build de produção
+- `npm run preview` — visualizar o build
 
 ## Requisitos
 
@@ -64,4 +64,4 @@ npm install
 npm run dev
 ```
 
-Acesse [http://localhost:5173](http://localhost:5173).
+Acesse [http://localhost:5173](http://localhost:5173). Digite um usuário do Instagram e clique em **Buscar** para listar os posts.

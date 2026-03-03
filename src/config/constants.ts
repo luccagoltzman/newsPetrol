@@ -1,20 +1,20 @@
 /**
  * Constantes da aplicação.
- * Substitua API_BASE_URL pela URL real da API quando disponível.
+ * API: Instagram120 (RapidAPI) — posts do Instagram.
  */
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'https://api.example.com';
+const RAPIDAPI_HOST =
+  import.meta.env.VITE_RAPIDAPI_HOST ?? 'instagram120.p.rapidapi.com';
+
+export const API_BASE_URL = `https://${RAPIDAPI_HOST}`;
 
 export const API_ENDPOINTS = {
-  NEWS: '/noticias',
+  INSTAGRAM_POSTS: '/api/instagram/posts',
+  MEDIA_BY_SHORTCODE: '/api/instagram/mediaByShortcode',
 } as const;
 
-export const SOURCE_OPTIONS = [
-  { value: '', label: 'Todas as fontes' },
-  { value: 'telegraph', label: 'Telegraph' },
-  { value: 'thetimes', label: 'The Times' },
-  { value: 'reuters', label: 'Reuters' },
-  { value: 'bbc', label: 'BBC' },
-  { value: 'guardian', label: 'The Guardian' },
-] as const;
+export const RAPIDAPI_HEADERS = {
+  'Content-Type': 'application/json',
+  'x-rapidapi-host': RAPIDAPI_HOST,
+  'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY ?? '',
+} as const;

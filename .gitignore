@@ -1,0 +1,25 @@
+# Dependências
+node_modules
+
+# Build
+dist
+*.local
+
+# Variáveis de ambiente (nunca commitar chaves)
+.env
+.env.local
+.env.*.local
+
+# Logs e cache
+npm-debug.log*
+pnpm-debug.log*
+.cache
+
+# IDE
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db

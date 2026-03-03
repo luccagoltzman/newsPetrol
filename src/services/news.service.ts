@@ -1,8 +1,8 @@
 /**
- * Serviço de comunicação com a API de notícias de petróleo e gás.
+ * Serviço de comunicação com a API de notícias de petróleo e gás (RapidAPI).
  */
 
-import { API_BASE_URL, API_ENDPOINTS } from '@/config/constants';
+import { API_BASE_URL, API_ENDPOINTS, RAPIDAPI_HEADERS } from '@/config/constants';
 import type { NewsArticle, NewsApiParams } from '@/types/news.types';
 
 const buildUrl = (params?: NewsApiParams): string => {
@@ -14,8 +14,17 @@ const buildUrl = (params?: NewsApiParams): string => {
 };
 
 export async function fetchNews(params?: NewsApiParams): Promise<NewsArticle[]> {
+  if (!RAPIDAPI_HEADERS['x-rapidapi-key']) {
+    throw new Error('Configure VITE_RAPIDAPI_KEY no arquivo .env');
+  }
+
   const url = buildUrl(params);
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      ...RAPIDAPI_HEADERS,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`Erro ao carregar notícias: ${response.status}`);
