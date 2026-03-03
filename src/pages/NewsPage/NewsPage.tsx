@@ -4,6 +4,7 @@ import type { InstagramPost } from '@/types/instagram.types';
 import { Layout } from '@/components/Layout/Layout';
 import { UsernameInput } from '@/components/UsernameInput/UsernameInput';
 import { PostCard } from '@/components/PostCard/PostCard';
+import { MediaViewer } from '@/components/MediaViewer/MediaViewer';
 import { Button } from '@/components/Button/Button';
 import { Spinner } from '@/components/Spinner/Spinner';
 import { EmptyState } from '@/components/EmptyState/EmptyState';
@@ -18,6 +19,7 @@ export function NewsPage(): JSX.Element {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<InstagramPost | null>(null);
 
   const loadPosts = async () => {
     if (!username.trim()) return;
@@ -98,10 +100,11 @@ export function NewsPage(): JSX.Element {
             <ul className={styles.list} aria-label="Lista de posts">
               {posts.map((post) => (
                 <li key={post.id}>
-                  <PostCard post={post} />
+                  <PostCard post={post} onPreview={setSelectedPost} />
                 </li>
               ))}
             </ul>
+            <MediaViewer post={selectedPost} onClose={() => setSelectedPost(null)} />
             {nextMaxId && (
               <div className={styles.loadMoreWrap}>
                 <Button

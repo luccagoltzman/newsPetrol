@@ -1,26 +1,39 @@
 import type { HTMLAttributes } from 'react';
 import type { InstagramPost } from '@/types/instagram.types';
 import { downloadMedia } from '@/utils/download';
+import { getProxiedMediaUrl } from '@/utils/proxyMedia';
 import styles from './PostCard.module.css';
 
 export interface PostCardProps extends HTMLAttributes<HTMLDivElement> {
   post: InstagramPost;
+  onPreview?: (post: InstagramPost) => void;
 }
 
-export function PostCard({ post, className = '', ...rest }: PostCardProps): JSX.Element {
-  const thumbUrl = post.mediaUrl;
+export function PostCard({ post, onPreview, className = '', ...rest }: PostCardProps): JSX.Element {
+  const thumbUrl = getProxiedMediaUrl(post.mediaUrl);
   const isVideo = Boolean(post.videoUrl);
   const downloadUrl = post.videoUrl ?? post.mediaUrl;
-  const downloadFilename = `instagram-${post.id}`;
+  const downloadFilename = `instagram-${post.id}${isVideo ? '.mp4' : '.jpg'}`;
+
+  const handleCardClick = (): void => {
+    onPreview?.(post);
+  };
 
   const handleDownload = (e: React.MouseEvent): void => {
     e.preventDefault();
     e.stopPropagation();
-    if (downloadUrl) downloadMedia(downloadUrl, downloadFilename);
+    if (downloadUrl) downloadMedia(getProxiedMediaUrl(downloadUrl), downloadFilename);
   };
 
   return (
-    <article className={`${styles.card} ${className}`.trim()} {...rest}>
+    <article
+      className={`${styles.card} ${className}`.trim()}
+      onClick={onPreview ? handleCardClick : undefined}
+      role={onPreview ? 'button' : undefined}
+      tabIndex={onPreview ? 0 : undefined}
+      onKeyDown={onPreview ? (e) => e.key === 'Enter' && handleCardClick() : undefined}
+      {...rest}
+    >
       <div className={styles.media}>
         {thumbUrl && (
           <img
@@ -37,7 +50,7 @@ export function PostCard({ post, className = '', ...rest }: PostCardProps): JSX.
             </svg>
           </span>
         )}
-        <div className={styles.overlay}>
+        <div className={styles.overlay} role="presentation">
           <button
             type="button"
             className={styles.actionBtn}
@@ -56,6 +69,7 @@ export function PostCard({ post, className = '', ...rest }: PostCardProps): JSX.
             rel="noopener noreferrer"
             className={styles.actionBtn}
             title="Abrir no Instagram"
+            onClick={(e) => e.stopPropagation()}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
               <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
