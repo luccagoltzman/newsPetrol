@@ -5,6 +5,7 @@ import { Layout } from '@/components/Layout/Layout';
 import { UsernameInput } from '@/components/UsernameInput/UsernameInput';
 import { PostCard } from '@/components/PostCard/PostCard';
 import { MediaViewer } from '@/components/MediaViewer/MediaViewer';
+import { DownloadOptionsModal } from '@/components/DownloadOptionsModal/DownloadOptionsModal';
 import { Button } from '@/components/Button/Button';
 import { Spinner } from '@/components/Spinner/Spinner';
 import { EmptyState } from '@/components/EmptyState/EmptyState';
@@ -20,6 +21,7 @@ export function NewsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPost, setSelectedPost] = useState<InstagramPost | null>(null);
+  const [downloadModalPost, setDownloadModalPost] = useState<InstagramPost | null>(null);
 
   const loadPosts = async () => {
     if (!username.trim()) return;
@@ -100,11 +102,23 @@ export function NewsPage(): JSX.Element {
             <ul className={styles.list} aria-label="Lista de posts">
               {posts.map((post) => (
                 <li key={post.id}>
-                  <PostCard post={post} onPreview={setSelectedPost} />
+                  <PostCard
+                    post={post}
+                    onPreview={setSelectedPost}
+                    onDownloadClick={setDownloadModalPost}
+                  />
                 </li>
               ))}
             </ul>
-            <MediaViewer post={selectedPost} onClose={() => setSelectedPost(null)} />
+            <MediaViewer
+              post={selectedPost}
+              onClose={() => setSelectedPost(null)}
+              onDownloadClick={setDownloadModalPost}
+            />
+            <DownloadOptionsModal
+              post={downloadModalPost}
+              onClose={() => setDownloadModalPost(null)}
+            />
             {nextMaxId && (
               <div className={styles.loadMoreWrap}>
                 <Button

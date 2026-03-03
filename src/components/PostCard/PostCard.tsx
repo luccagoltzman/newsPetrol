@@ -1,19 +1,17 @@
 import type { HTMLAttributes } from 'react';
 import type { InstagramPost } from '@/types/instagram.types';
-import { downloadMedia } from '@/utils/download';
 import { getProxiedMediaUrl } from '@/utils/proxyMedia';
 import styles from './PostCard.module.css';
 
 export interface PostCardProps extends HTMLAttributes<HTMLDivElement> {
   post: InstagramPost;
   onPreview?: (post: InstagramPost) => void;
+  onDownloadClick?: (post: InstagramPost) => void;
 }
 
-export function PostCard({ post, onPreview, className = '', ...rest }: PostCardProps): JSX.Element {
+export function PostCard({ post, onPreview, onDownloadClick, className = '', ...rest }: PostCardProps): JSX.Element {
   const thumbUrl = getProxiedMediaUrl(post.mediaUrl);
   const isVideo = Boolean(post.videoUrl);
-  const downloadUrl = post.videoUrl ?? post.mediaUrl;
-  const downloadFilename = `instagram-${post.id}${isVideo ? '.mp4' : '.jpg'}`;
 
   const handleCardClick = (): void => {
     onPreview?.(post);
@@ -22,7 +20,7 @@ export function PostCard({ post, onPreview, className = '', ...rest }: PostCardP
   const handleDownload = (e: React.MouseEvent): void => {
     e.preventDefault();
     e.stopPropagation();
-    if (downloadUrl) downloadMedia(getProxiedMediaUrl(downloadUrl), downloadFilename);
+    onDownloadClick?.(post);
   };
 
   return (

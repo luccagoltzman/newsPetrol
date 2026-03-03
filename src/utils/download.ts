@@ -1,4 +1,19 @@
 /**
+ * Dispara o download de um Blob com o nome de arquivo informado.
+ */
+export function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename.replace(/\s+/g, '-');
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/**
  * Tenta baixar um arquivo pela URL.
  * Se o servidor permitir CORS, faz fetch e dispara download; senão abre em nova aba.
  */

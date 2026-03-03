@@ -1,15 +1,15 @@
 import { useEffect, useRef } from 'react';
 import type { InstagramPost } from '@/types/instagram.types';
-import { downloadMedia } from '@/utils/download';
 import { getProxiedMediaUrl } from '@/utils/proxyMedia';
 import styles from './MediaViewer.module.css';
 
 export interface MediaViewerProps {
   post: InstagramPost | null;
   onClose: () => void;
+  onDownloadClick?: (post: InstagramPost) => void;
 }
 
-export function MediaViewer({ post, onClose }: MediaViewerProps): JSX.Element | null {
+export function MediaViewer({ post, onClose, onDownloadClick }: MediaViewerProps): JSX.Element | null {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export function MediaViewer({ post, onClose }: MediaViewerProps): JSX.Element | 
 
   const isVideo = Boolean(post.videoUrl);
   const downloadUrl = post.videoUrl ?? post.mediaUrl;
-  const downloadFilename = `instagram-${post.id}${isVideo ? '.mp4' : '.jpg'}`;
   const displayImageUrl = getProxiedMediaUrl(post.mediaUrl);
   const displayVideoUrl = post.videoUrl ? getProxiedMediaUrl(post.videoUrl) : '';
 
@@ -45,7 +44,7 @@ export function MediaViewer({ post, onClose }: MediaViewerProps): JSX.Element | 
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (downloadUrl) downloadMedia(getProxiedMediaUrl(downloadUrl), downloadFilename);
+    onDownloadClick?.(post);
   };
 
   return (
